@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Plays the README demo against the live API. To re-record docs/demo.gif (asciinema 3 + agg):
-#   OPENROUTER_API_KEY=... asciinema rec --headless --window-size 118x30 -c docs/demo.sh demo.cast
+#   OPENROUTER_API_KEY=... asciinema rec --headless --window-size 140x32 -c docs/demo.sh demo.cast
 #   agg --font-size 15 demo.cast docs/demo.gif
 set -u
 repo=$(cd "$(dirname "$0")/.." && pwd)
@@ -18,13 +18,15 @@ say() {  # show a prompt and "type" a command
 
 # 1. Follow a live log. A background writer replays the incident from the sample, a line
 #    every 0.3 s; only the real problems come out the other end.
-sed -n '56,108p' app.log | while IFS= read -r line; do printf '%s\n' "$line"; sleep 0.3; done >>server.log &
+awk 'NR >= 56 && NR <= 108 && length($0) < 140' app.log |
+  while IFS= read -r line; do printf '%s\n' "$line"; sleep 0.3; done >>server.log &
 say 'tail -f server.log | jevgrep "This line reports a real error, not routine noise"'
 tail -f server.log | jevgrep "This line reports a real error, not routine noise" --model jev-1.13 &
-sleep 17
-pkill -TERM -f "jevgrep This line reports" 2>/dev/null
-pkill -TERM -f "tail -f server.log" 2>/dev/null
-wait 2>/dev/null
+disown  # no "Terminated" notice when we stop it below
+sleep 15
+pkill -TERM -f "jevgrep This line reports"
+pkill -TERM -f "tail -f server.log"
+sleep 0.3
 printf '^C\n'
 sleep 1
 

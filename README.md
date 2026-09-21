@@ -7,8 +7,7 @@ the answer is yes. Each line is judged by [TypeSafe's Jev](https://docs.typesafe
 $ tail -f server.log | jevgrep "This line reports a real error, not routine noise"
 ```
 
-![demo: tail -f server.log | jevgrep "real error"](https://raw.githubusercontent.com/allebee/jevgrep/main/docs/demo.gif)
-<!-- Placeholder: record it with `vhs docs/demo.tape` -->
+![jevgrep following a live log, then summarizing payment failures with --explain](https://raw.githubusercontent.com/allebee/jevgrep/main/docs/demo.gif)
 
 jevgrep asks Jev one Noul question per line, e.g. "Does `lines.line_03` satisfy: This line
 reports a real error, not routine noise?". It prints the lines whose probability of *yes* is at or
@@ -233,6 +232,10 @@ uv run ruff check .
 uv sync --group bench        # adds system-one-adapter
 OPENROUTER_API_KEY=... uv run python bench/bench.py   # writes bench/results.md and results.json
 ```
+
+Releasing: bump `version` in `pyproject.toml` and `src/jevgrep/__init__.py`, commit, then
+`git tag vX.Y.Z && git push origin vX.Y.Z`. The `Publish to PyPI` workflow tests, builds and
+uploads with PyPI trusted publishing. `docs/demo.sh` re-records the GIF (see the script header).
 
 Layout: `src/jevgrep/` holds `cli.py` (flags, output, exit codes, signals), `scan.py` (reader,
 batcher, cache, ordering), `judge.py` (Judge protocol and the Jev judge), `provider.py` (keys and
