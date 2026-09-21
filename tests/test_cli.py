@@ -202,3 +202,11 @@ def test_explain_needs_openrouter_even_with_a_typesafe_key(monkeypatch, summarie
     result = invoke("q", "--explain")
     assert result.exit_code == 2
     assert "--explain needs OPENROUTER_API_KEY" in result.stderr
+
+
+def test_version_matches_the_package_metadata():
+    from importlib.metadata import version
+
+    from jevgrep import __version__
+
+    assert __version__ == version("jevgrep")

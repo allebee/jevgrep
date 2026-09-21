@@ -7,7 +7,7 @@ the answer is yes. Each line is judged by [TypeSafe's Jev](https://docs.typesafe
 $ tail -f server.log | jevgrep "This line reports a real error, not routine noise"
 ```
 
-![demo: tail -f server.log | jevgrep "real error"](docs/demo.gif)
+![demo: tail -f server.log | jevgrep "real error"](https://raw.githubusercontent.com/allebee/jevgrep/main/docs/demo.gif)
 <!-- Placeholder: record it with `vhs docs/demo.tape` -->
 
 jevgrep asks Jev one Noul question per line, e.g. "Does `lines.line_03` satisfy: This line
@@ -24,8 +24,8 @@ pipx install jevgrep                                  # or install the command
 pipx install 'jevgrep[explain]'                       # with --explain support (adds openai)
 ```
 
-jevgrep is not on PyPI yet. Until it is, install it from a checkout:
-`uv tool install '.[explain]'` or `pipx install '.[explain]'`.
+Or straight from GitHub:
+`uv tool install 'jevgrep[explain] @ git+https://github.com/allebee/jevgrep'`.
 
 Then set one API key:
 
@@ -136,7 +136,7 @@ key, API failure after retries, bad arguments). Ctrl+C exits with `130` after pr
 ## Benchmark
 
 Jev compared with two Claude models on the 195 hand-labelled lines of
-[`examples/sample.log`](examples/README.md), for three questions. It ran on 2026-09-21 through
+[`examples/sample.log`](https://github.com/allebee/jevgrep/blob/main/examples/README.md), for three questions. It ran on 2026-09-21 through
 **OpenRouter**, with Jev pinned to `jev-1.13` (answered by `typesafe/jev-1.13-20260917`). Every
 system got the same state, the same per-line Noul questions, the same batching and cache, and a
 0.5 threshold. The LLMs answered through
@@ -153,7 +153,7 @@ probabilities mode). Requests were sent one at a time, so times are comparable; 
 | Claude Sonnet 5 | 0.911 | **0.945** | **1.000** | **0.952** | 266 s | $0.4108 |
 
 Per-question precision and recall, latencies and every line each system got wrong are in
-[`bench/results.md`](bench/results.md). Raw probabilities are in `bench/results.json`.
+[`bench/results.md`](https://github.com/allebee/jevgrep/blob/main/bench/results.md). Raw probabilities are in `bench/results.json`.
 
 What the numbers say:
 
@@ -182,7 +182,7 @@ What the numbers say:
   to 0.035 with the list layout.
 
 Caveats: this is one small synthetic log, labelled by the same author who wrote jevgrep (the
-rules are in [`examples/README.md`](examples/README.md)). The LLMs ran once each. Treat the
+rules are in [`examples/README.md`](https://github.com/allebee/jevgrep/blob/main/examples/README.md)). The LLMs ran once each. Treat the
 numbers as a sanity check, not a leaderboard. Reproduce them with `uv sync --group bench &&
 uv run python bench/bench.py`.
 
