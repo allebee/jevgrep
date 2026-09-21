@@ -1,19 +1,57 @@
-# jevgrep
+<h1 align="center">jevgrep</h1>
 
-**grep by meaning:** pipe in any text, ask a yes/no question, and get back only the lines where
-the answer is yes. Each line is judged by [TypeSafe's Jev](https://docs.typesafe.ai).
+<p align="center">
+  <b>grep by meaning.</b> Pipe in any text, ask a yes/no question in plain English,<br>
+  and get back only the lines where the answer is yes.
+</p>
 
-```console
-$ tail -f server.log | jevgrep "This line reports a real error, not routine noise"
+<p align="center">
+  <a href="https://pypi.org/project/jevgrep-cli/"><img src="https://img.shields.io/pypi/v/jevgrep-cli" alt="PyPI version"></a>
+  <a href="https://pypi.org/project/jevgrep-cli/"><img src="https://img.shields.io/pypi/pyversions/jevgrep-cli" alt="Python versions"></a>
+  <a href="https://github.com/allebee/jevgrep/actions/workflows/ci.yml"><img src="https://github.com/allebee/jevgrep/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
+  <a href="https://github.com/allebee/jevgrep/blob/main/LICENSE"><img src="https://img.shields.io/pypi/l/jevgrep-cli" alt="MIT license"></a>
+</p>
+
+<p align="center">
+  <a href="#install">Install</a> ·
+  <a href="#examples">Examples</a> ·
+  <a href="#benchmark">Benchmark</a> ·
+  <a href="#how-it-works">How it works</a> ·
+  <a href="#known-limitations">Limitations</a>
+</p>
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/allebee/jevgrep/main/docs/demo.gif" alt="jevgrep following a live log and printing only the real errors, then summarizing payment failures with --explain" width="900">
+</p>
+
+```sh
+uv tool install jevgrep-cli && export OPENROUTER_API_KEY=sk-or-...
+tail -f server.log | jevgrep "This line reports a real error, not routine noise"
 ```
 
-![jevgrep following a live log, then summarizing payment failures with --explain](https://raw.githubusercontent.com/allebee/jevgrep/main/docs/demo.gif)
+## Why jevgrep
 
-jevgrep asks Jev one Noul question per line, e.g. "Does `lines.line_03` satisfy: This line
-reports a real error, not routine noise?". It prints the lines whose probability of *yes* is at or
-above `--threshold`. It streams: lines are sent in small batches as they arrive, so it works behind
-`tail -f`. The optional `--explain` flag sends the matches to Claude for a short summary of
-patterns and likely root causes.
+- **Filters by meaning, not keywords.** On the benchmark log, it kept the 503 access-log line,
+  the `Traceback` and the `OOMKilled` event, none of which contain "error". It dropped
+  `error_rate=0.00`, `0 failed payments` and `error handler registered`.
+- **Fast enough for a pipe.** A match shows up about 0.7 s after the line is written, so it works
+  behind `tail -f`, `kubectl logs -f` or `journalctl -f`.
+- **Cheap.** About $0.004 per 1,000 lines. On the [benchmark](#benchmark) that is 46× cheaper than
+  Claude Haiku 4.5 and 170× cheaper than Claude Sonnet 5, with a mean F1 of 0.90 against their
+  0.87 and 0.95.
+- **Behaves like grep.** It supports `-v`, `-n`, `--json` and pipes, and uses grep's exit codes
+  (0, 1, 2). Ctrl+C and `| head` are handled cleanly.
+- **Explains what it found.** `--explain` asks Claude for a 3–5 sentence summary of the matches
+  and their likely root cause.
+- **Honest about its limits.** The benchmark is hand-labelled, and the README reports
+  [where Jev loses](#known-limitations).
+
+If a regex can express what you're looking for, use `grep` or `rg`. They're free and instant.
+jevgrep is for questions a pattern can't express.
+
+Each line gets one yes/no question to [TypeSafe's Jev](https://docs.typesafe.ai), e.g. "Does
+`lines.line_03` satisfy: This line reports a real error, not routine noise?". jevgrep prints the
+lines whose probability of *yes* is at or above `--threshold`.
 
 ## Install
 
@@ -136,6 +174,13 @@ key, API failure after retries, bad arguments). Ctrl+C exits with `130` after pr
 
 ## Benchmark
 
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/allebee/jevgrep/main/docs/benchmark-dark.svg">
+    <img alt="Scatter plot of mean F1 against cost. Jev with jevgrep's defaults: F1 0.904 for $0.0024. Jev with the list layout: 0.754 for $0.0023. Jev at batch 1: 0.881 for $0.0082. Claude Haiku 4.5: 0.873 for $0.1113. Claude Sonnet 5: 0.952 for $0.4108." src="https://raw.githubusercontent.com/allebee/jevgrep/main/docs/benchmark-light.svg" width="760">
+  </picture>
+</p>
+
 Jev compared with two Claude models on the 195 hand-labelled lines of
 [`examples/sample.log`](https://github.com/allebee/jevgrep/blob/main/examples/README.md), for three questions. It ran on 2026-09-21 through
 **OpenRouter**, with Jev pinned to `jev-1.13` (answered by `typesafe/jev-1.13-20260917`). Every
@@ -187,6 +232,15 @@ rules are in [`examples/README.md`](https://github.com/allebee/jevgrep/blob/main
 numbers as a sanity check, not a leaderboard. Reproduce them with `uv sync --group bench &&
 uv run python bench/bench.py`.
 
+## Privacy
+
+Your text leaves your machine. Every judged line is sent to the Jev API: to OpenRouter, which
+forwards it to TypeSafe, or to TypeSafe directly with `--provider typesafe`. `--explain`
+additionally sends up to 200 selected lines to Anthropic through OpenRouter. Don't pipe in
+secrets or personal data you aren't allowed to share with those providers. Check their data
+policies: [TypeSafe](https://docs.typesafe.ai/legal) and
+[OpenRouter](https://openrouter.ai/privacy).
+
 ## Known limitations
 
 - **Literal reading.** Jev answers the question you wrote, not the one you meant (see
@@ -216,6 +270,13 @@ uv run python bench/bench.py`.
   `--model jev-1.13` when you compare runs.
 - **English first.** Jev's accuracy is best on English text.
 
+## Contributing
+
+Bug reports, ideas and pull requests are welcome. If jevgrep got a line wrong, open a
+["wrong verdict" issue](https://github.com/allebee/jevgrep/issues/new?template=wrong-verdict.yml)
+with the line, the question and the score. Those reports are the most useful way to improve the
+defaults. The release history is in [CHANGELOG.md](https://github.com/allebee/jevgrep/blob/main/CHANGELOG.md).
+
 ## Related
 
 - [jgrep](https://github.com/keltokhy/jgrep) (`jev-grep` on PyPI) is an independent tool built
@@ -239,6 +300,7 @@ uv run pytest                # offline, uses a fake judge
 uv run ruff check .
 uv sync --group bench        # adds system-one-adapter
 OPENROUTER_API_KEY=... uv run python bench/bench.py   # writes bench/results.md and results.json
+uv run python bench/chart.py                          # redraws docs/benchmark-*.svg
 ```
 
 Releasing: bump `version` in `pyproject.toml` and `src/jevgrep/__init__.py`, commit, then

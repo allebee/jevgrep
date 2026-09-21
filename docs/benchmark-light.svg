@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 400" width="760" height="400" role="img" aria-labelledby="title desc" font-family='system-ui, -apple-system, "Segoe UI", Helvetica, Arial, sans-serif'>
+<title id="title">jevgrep benchmark: accuracy vs. cost</title>
+<desc id="desc">Jev (batch 20): mean F1 0.904, cost $0.0024; Jev (batch 20, list layout): mean F1 0.754, cost $0.0023; Jev (batch 1): mean F1 0.881, cost $0.0082; Claude Haiku 4.5: mean F1 0.873, cost $0.1113; Claude Sonnet 5: mean F1 0.952, cost $0.4108</desc>
+<rect x="0.5" y="0.5" width="759" height="399" rx="10" fill="#fcfcfb" stroke="#e1e0d9"/>
+<text x="24.0" y="36.0" fill="#0b0b0b" font-size="17" font-weight="600" text-anchor="start">Accuracy vs. cost on 195 labelled log lines</text>
+<text x="24.0" y="60.0" fill="#52514e" font-size="13" font-weight="400" text-anchor="start">Mean F1 over three questions against total cost through OpenRouter (log scale). Up and to the left is better.</text>
+<line x1="72" y1="340.0" x2="724" y2="340.0" stroke="#c3c2b7" stroke-width="1"/>
+<text x="62.0" y="344.0" fill="#898781" font-size="12" font-weight="400" text-anchor="end">0.70</text>
+<line x1="72" y1="258.7" x2="724" y2="258.7" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62.0" y="262.7" fill="#898781" font-size="12" font-weight="400" text-anchor="end">0.80</text>
+<line x1="72" y1="177.3" x2="724" y2="177.3" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62.0" y="181.3" fill="#898781" font-size="12" font-weight="400" text-anchor="end">0.90</text>
+<line x1="72" y1="96.0" x2="724" y2="96.0" stroke="#e1e0d9" stroke-width="1"/>
+<text x="62.0" y="100.0" fill="#898781" font-size="12" font-weight="400" text-anchor="end">1.00</text>
+<line x1="72.0" y1="96" x2="72.0" y2="340" stroke="#e1e0d9" stroke-width="1"/>
+<text x="72.0" y="360.0" fill="#898781" font-size="12" font-weight="400" text-anchor="middle">$0.001</text>
+<line x1="289.3" y1="96" x2="289.3" y2="340" stroke="#e1e0d9" stroke-width="1"/>
+<text x="289.3" y="360.0" fill="#898781" font-size="12" font-weight="400" text-anchor="middle">$0.01</text>
+<line x1="506.7" y1="96" x2="506.7" y2="340" stroke="#e1e0d9" stroke-width="1"/>
+<text x="506.7" y="360.0" fill="#898781" font-size="12" font-weight="400" text-anchor="middle">$0.10</text>
+<line x1="724.0" y1="96" x2="724.0" y2="340" stroke="#e1e0d9" stroke-width="1"/>
+<text x="724.0" y="360.0" fill="#898781" font-size="12" font-weight="400" text-anchor="middle">$1.00</text>
+<text x="398.0" y="384.0" fill="#52514e" font-size="12" font-weight="400" text-anchor="middle">Total cost for 585 line judgments (USD, log scale)</text>
+<text x="20" y="218.0" fill="#52514e" font-size="12" text-anchor="middle" transform="rotate(-90 20 218.0)">Mean F1</text>
+<circle cx="149.1" cy="296.1" r="5.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
+<text x="161.1" y="294.1" fill="#52514e" font-size="13" font-weight="500" text-anchor="start" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">Jev · list layout</text>
+<text x="161.1" y="310.1" fill="#898781" font-size="12" font-weight="400" text-anchor="start" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">F1 0.754 · $0.0023</text>
+<circle cx="270.5" cy="192.5" r="5.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
+<text x="258.5" y="200.5" fill="#52514e" font-size="13" font-weight="500" text-anchor="end" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">Jev · batch 1</text>
+<text x="258.5" y="216.5" fill="#898781" font-size="12" font-weight="400" text-anchor="end" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">F1 0.881 · $0.0082</text>
+<circle cx="516.8" cy="199.5" r="5.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
+<text x="528.8" y="207.5" fill="#52514e" font-size="13" font-weight="500" text-anchor="start" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">Claude Haiku 4.5</text>
+<text x="528.8" y="223.5" fill="#898781" font-size="12" font-weight="400" text-anchor="start" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">F1 0.873 · $0.1113</text>
+<circle cx="640.0" cy="135.0" r="5.5" fill="#898781" stroke="#fcfcfb" stroke-width="2"/>
+<text x="628.0" y="127.0" fill="#52514e" font-size="13" font-weight="500" text-anchor="end" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">Claude Sonnet 5</text>
+<text x="628.0" y="143.0" fill="#898781" font-size="12" font-weight="400" text-anchor="end" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">F1 0.952 · $0.4108</text>
+<circle cx="156.1" cy="173.8" r="7" fill="#2a78d6" stroke="#fcfcfb" stroke-width="2"/>
+<text x="156.1" y="145.8" fill="#0b0b0b" font-size="13" font-weight="600" text-anchor="middle" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">Jev · jevgrep default</text>
+<text x="156.1" y="161.8" fill="#898781" font-size="12" font-weight="400" text-anchor="middle" stroke="#fcfcfb" stroke-width="4" stroke-linejoin="round" paint-order="stroke">F1 0.904 · $0.0024</text>
+</svg>

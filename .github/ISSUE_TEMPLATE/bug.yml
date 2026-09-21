@@ -1,0 +1,25 @@
+name: Bug report
+description: A crash, a hang, wrong output formatting, or anything else that isn't a judgment call
+labels: ["bug"]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you ran, what you expected, and what you got instead.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Command and output
+      description: The full command and its output, including anything on stderr. Remove API keys.
+      render: console
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      description: "`jevgrep --version`, Python version, OS, provider (openrouter or typesafe)"
+      placeholder: jevgrep 0.1.0, Python 3.12, macOS 14, openrouter
+    validations:
+      required: true

@@ -1,0 +1,40 @@
+name: Wrong verdict
+description: jevgrep kept a line it should have dropped, or dropped one it should have kept
+labels: ["wrong verdict"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks! These reports help tune the defaults and the question phrasing.
+        Please remove anything private from the log lines before posting.
+  - type: input
+    id: question
+    attributes:
+      label: Question
+      description: The exact QUESTION you passed to jevgrep.
+      placeholder: This line reports a real error, not routine noise
+    validations:
+      required: true
+  - type: textarea
+    id: lines
+    attributes:
+      label: Lines and scores
+      description: The misjudged line(s) with their `--score` output, and a few neighbouring lines if you have them (they share a batch).
+      render: text
+    validations:
+      required: true
+  - type: dropdown
+    id: direction
+    attributes:
+      label: What went wrong
+      options:
+        - Kept a line that does not match (false positive)
+        - Dropped a line that matches (false negative)
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version and model
+      description: Output of `jevgrep --version`, plus the `model` row from `--stats` if you have it.
+      placeholder: jevgrep 0.1.0, typesafe/jev-1.13-20260917 via openrouter
