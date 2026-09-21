@@ -1,0 +1,41 @@
+[project]
+name = "jevgrep"
+version = "0.1.0"
+description = "grep by meaning: filter any text stream with a yes/no question, judged line by line by TypeSafe's Jev."
+readme = "README.md"
+requires-python = ">=3.10"
+keywords = ["grep", "logs", "cli", "typesafe", "jev", "semantic-filter"]
+classifiers = [
+    "Environment :: Console",
+    "Programming Language :: Python :: 3",
+    "Topic :: System :: Logging",
+    "Topic :: Utilities",
+]
+dependencies = [
+    "click>=8.1",
+    "typesafe-sdk>=0.7.1,<0.8",
+]
+
+[project.optional-dependencies]
+explain = ["openai>=1.40"]
+
+[project.scripts]
+jevgrep = "jevgrep.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8", "ruff>=0.6", "openai>=1.40"]
+bench = ["system-one-adapter[openai]>=0.2"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "SIM", "RUF"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
