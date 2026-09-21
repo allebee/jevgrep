@@ -56,5 +56,5 @@ def test_explain_needs_an_openrouter_key(monkeypatch):
 def test_explain_needs_the_openai_extra(monkeypatch):
     monkeypatch.setenv("OPENROUTER_API_KEY", "sk-test")
     monkeypatch.setitem(sys.modules, "openai", None)  # makes `import openai` fail
-    with pytest.raises(ConfigError, match=r"jevgrep\[explain\]"):
+    with pytest.raises(ConfigError, match=r"jevgrep-cli\[explain\]"):
         explain.explain_api_key()

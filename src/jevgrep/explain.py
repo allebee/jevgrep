@@ -89,7 +89,7 @@ def explain_api_key() -> str:
         import openai  # noqa: F401
     except ImportError:
         raise ConfigError(
-            "--explain needs the optional openai package: pip install 'jevgrep[explain]'"
+            "--explain needs the optional openai package: pip install 'jevgrep-cli[explain]'"
         ) from None
     return key
 

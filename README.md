@@ -17,14 +17,16 @@ patterns and likely root causes.
 
 ## Install
 
+The package is `jevgrep-cli` on PyPI; the command it installs is `jevgrep`.
+
 ```sh
-uvx jevgrep "Mentions a payment failure" app.log   # run without installing
-pipx install jevgrep                                  # or install the command
-pipx install 'jevgrep[explain]'                       # with --explain support (adds openai)
+uv tool install jevgrep-cli                  # or: pipx install jevgrep-cli
+uv tool install 'jevgrep-cli[explain]'       # with --explain support (adds openai)
+uvx --from jevgrep-cli jevgrep "Mentions a payment failure" app.log   # run without installing
 ```
 
 Or straight from GitHub:
-`uv tool install 'jevgrep[explain] @ git+https://github.com/allebee/jevgrep'`.
+`uv tool install 'jevgrep-cli[explain] @ git+https://github.com/allebee/jevgrep'`.
 
 Then set one API key:
 
@@ -216,6 +218,12 @@ uv run python bench/bench.py`.
 
 ## Related
 
+- [jgrep](https://github.com/keltokhy/jgrep) (`jev-grep` on PyPI) is an independent tool built
+  on the same idea: one Jev question per line, streaming, `tail -f`, input order kept. It also
+  handles several descriptions in one pass, parses Python and Go functions and unified diffs,
+  and supports LLM gateways. jevgrep's additions are the `--explain` summaries, per-run cost and
+  latency stats, named-line state, and a labelled benchmark against LLMs. Its name is why this
+  package is `jevgrep-cli` on PyPI.
 - [jev-cli](https://github.com/tumf/jev-cli) is a general-purpose CLI and MCP server for Jev: you
   send one state and your own questions, and get answers back. jevgrep does one narrower job. It
   streams arbitrary text, asks the same question about every line in micro-batches, and behaves

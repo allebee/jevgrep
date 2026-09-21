@@ -1,5 +1,5 @@
 [project]
-name = "jevgrep"
+name = "jevgrep-cli"  # "jevgrep" is too close to jev-grep on PyPI; the command is jevgrep
 version = "0.1.0"
 description = "grep by meaning: filter any text stream with a yes/no question, judged line by line by TypeSafe's Jev."
 readme = "README.md"
@@ -46,6 +46,9 @@ bench = ["system-one-adapter[openai]>=0.2"]
 [build-system]
 requires = ["hatchling>=1.27"]
 build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/jevgrep"]  # the distribution is jevgrep-cli, the import name is jevgrep
 
 [tool.hatch.build.targets.sdist]
 include = ["/src", "/tests", "/README.md", "/LICENSE"]

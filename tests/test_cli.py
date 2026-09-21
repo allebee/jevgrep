@@ -209,4 +209,4 @@ def test_version_matches_the_package_metadata():
 
     from jevgrep import __version__
 
-    assert __version__ == version("jevgrep")
+    assert __version__ == version("jevgrep-cli")

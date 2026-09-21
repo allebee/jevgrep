@@ -276,7 +276,7 @@ def main() -> None:
         "lines": len(labels),
         "threshold": THRESHOLD,
         "structured": args.structured,
-        "jevgrep_version": version("jevgrep"),
+        "jevgrep_version": version("jevgrep-cli"),
         "typesafe_sdk_version": version("typesafe-sdk"),
         "adapter_version": version("system-one-adapter"),
     }
