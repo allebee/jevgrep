@@ -3,7 +3,7 @@
     uv sync --group bench
     OPENROUTER_API_KEY=... uv run python bench/bench.py
 
-Every system gets the same per-line Noul questions, the same state ({"lines": [...]}), the same
+Every system gets the same per-line Noul questions, the same state ({"lines": {...}}), the same
 batching and cache (jevgrep's Scanner) and the same 0.5 threshold. The LLMs answer through the
 official system-one-adapter package, which turns the Noul questions into an LLM prompt and parses
 probabilities back. Requests run one at a time (--jobs 1) so wall times are comparable.
@@ -52,10 +52,12 @@ class System:
     kind: str  # "jev" or "llm"
     model: str
     batch_size: int = 20
+    layout: str = "keyed"  # see jevgrep.judge.build_request
 
 
 SYSTEMS = {
     "jev": System("Jev (batch 20)", "jev", "jev-1.13"),
+    "jev-list": System("Jev (batch 20, list layout)", "jev", "jev-1.13", layout="list"),
     "jev-b1": System("Jev (batch 1)", "jev", "jev-1.13", batch_size=1),
     "haiku": System("Claude Haiku 4.5", "llm", "anthropic/claude-haiku-4.5"),
     "sonnet": System("Claude Sonnet 5", "llm", "anthropic/claude-sonnet-5"),
@@ -78,7 +80,7 @@ class AdapterJudge(SystemOneJudge):
 
 def make_judge(system: System, api_key: str, structured: bool) -> SystemOneJudge:
     if system.kind == "jev":
-        return make_jev_judge(resolve_provider("openrouter"), system.model)
+        return make_jev_judge(resolve_provider("openrouter"), system.model, system.layout)
     client = SystemOneAdapterClient(
         structured_outputs=structured,
         llm_answer_mode="probabilities",
@@ -89,7 +91,7 @@ def make_judge(system: System, api_key: str, structured: bool) -> SystemOneJudge
     provider = OpenAIProvider(
         system.model, base_url=OPENROUTER_CHAT_BASE_URL, api_key=api_key, api="chat_completions"
     )
-    return AdapterJudge(client, model=provider)
+    return AdapterJudge(client, model=provider, layout=system.layout)
 
 
 def load_labels() -> dict[int, dict[str, int]]:
@@ -137,6 +139,7 @@ def run(system: System, task: str, api_key: str, structured: bool) -> dict[str, 
         "requested_model": system.model,
         "answered_by": sorted(usage.models),
         "batch_size": system.batch_size,
+        "layout": system.layout,
         "seconds": elapsed,
         "requests": usage.requests,
         "input_tokens": usage.input_tokens,
@@ -164,6 +167,10 @@ def report(runs: list[dict[str, Any]], labels: dict[int, dict[str, int]], meta: 
         f"LLMs via system-one-adapter {meta['adapter_version']} "
         f"({'native structured output' if meta['structured'] else 'prompted JSON'}, "
         "probabilities mode). Cost is OpenRouter's reported `usage.cost`.",
+        "",
+        "Every system gets the same questions. Unless a row says otherwise, lines are keyed "
+        '(`state={"lines": {"line_01": ...}}`, "Does `lines.line_01` satisfy: ...?"); the '
+        '*list layout* row uses the original `state={"lines": [...]}` with `lines[i]`.',
         "",
     ]
     for task in dict.fromkeys(r["task"] for r in runs):
